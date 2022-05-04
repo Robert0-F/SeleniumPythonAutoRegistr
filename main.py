@@ -26,7 +26,7 @@ proxy_option = {
 
 
 agent = get_user_agent()
-
+print('aye')
 options.add_extension('anticaptcha-plugin_v0_52.xpi')
 options.add_argument('--disable-notifications')
 options.add_argument('disable-infobars')
@@ -81,9 +81,6 @@ if __name__ == '__main__':
         pole = driver.find_element(By.XPATH, '//*[@id="gigya-textbox-39065714942046050"]')
         action.move_to_element(pole).click().perform()
         pole.send_keys(address.postal_code())
-        #pole = driver.find_element(by=By.ID, value='Email')
-        #pole.click()
-        # pole.send_keys(EMAIL)
         pole = driver.find_element(By.XPATH, '//*[@id="gigya-textbox-55761250888667520"]')
         action.move_to_element(pole).click().perform()
         pole.send_keys(phone)
@@ -112,7 +109,6 @@ if __name__ == '__main__':
         pole.send_keys(password)
 
         # password 2
-        password = 'DjambulatLubitRamazana123!'
         pole = driver.find_element(By.XPATH, '//*[@id="gigya-password-2803893837206091"]')
         pole.send_keys(password)
 

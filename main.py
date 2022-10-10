@@ -45,7 +45,12 @@ options.add_argument('--disable-blink-features=AutomationControlled')
 options.add_experimental_option('useAutomationExtension', False)
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 driver = webdriver.Chrome('chromedriver.exe', options=options)
-
+headers = {'Referer': 'https://www.doritosrockstarenergy.com/registration',
+           'Origin': 'https://www.doritosrockstarenergy.com',
+           'Host': 'www.doritosrockstarenergy.com',
+           'User-Agent': f'{get_user_agent()}',
+           'sec-ch-ua': '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"'
+}
 
 def generateEmail():
     return ''.join(choice(ascii_letters) for i in range(12)) + str(random.randint(10, 9999)) + '@hosttomals.com'
@@ -58,6 +63,26 @@ def getName():
 
 def zipCod():
     return random.randint(12345, 99999)
+
+def get_codes(upc, front):
+    link = 'https://www.doritosrockstarenergy.com/WebMethods.aspx/EnterCodes'
+    headers = {}
+    for i in range(upc, 99999):
+        for j in range(front, 999999999):
+            data = {'codes' : [f'{i}', f'{j}']}
+            data = json.dumps(data)
+
+def registration():
+    data = {'BirthDate': "07/05/2001",
+            'Email': f"{generateEmail()}",
+            'FirstName': f'{getName()[0]}',
+            'LastName': f'{getName()[1]}',
+            'PostalCode':f"{zipCod()}",
+            'SiteCode': "Microsite"}
+    data = json.dumps(data)
+    session = requests.Session()
+    lnk = 'https://www.doritosrockstarenergy.com/WebMethods.aspx/Register'
+    print(session.post(lnk, headers = headers, data = data))
 
 
 def captha_solve():
@@ -95,7 +120,6 @@ def captha_solve():
                 return respone_captha
             if attemps > 14:
                 break
-        print("Xyu`")
 
 
 

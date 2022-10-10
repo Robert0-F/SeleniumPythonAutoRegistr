@@ -7,6 +7,6 @@ def generate_login():
     for i in range(0, random.randint(7, 10)):
         setik.append(random.choice(set_of_letters))
     login = ''.join(setik)
-    login += '@labelpap.com'
+    # login += '@labelpap.com'
     return login
 

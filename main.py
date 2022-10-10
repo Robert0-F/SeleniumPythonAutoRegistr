@@ -1,7 +1,10 @@
 from seleniumwire import webdriver
 import time
 import random
-from mimesis import Address
+
+from random import choice
+from string import ascii_letters
+
 from mimesis.locales import Locale
 from mimesis import Person
 from selenium.webdriver.support.wait import WebDriverWait
@@ -11,23 +14,25 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from scripts.getProxy import get_proxy
 from scripts.getUserAgent import get_user_agent
-
+from scripts.emailApi import check_all_emails, read
 from scripts.getEmail import generate_login
+import requests
+import undetected_chromedriver as uc
+import json
 
-person = Person(Locale.DA)
-address = Address(Locale.DA)
+
 options = webdriver.ChromeOptions()
-login, password, proxy, port = get_proxy()
-proxy_option = {
-    "proxy":{
-        "https": f"https://{login}:{password}@{proxy}:{port}"
-    }
-}
 
+# login, password, proxy, port = get_proxy()
+#
+# proxy_option = {
+#     "proxy":{
+#         "https": f"https://{login}:{password}@{proxy}:{port}"
+#     }
+# }
+clintKeyAntiCaptcha = '51eae633b6157688e92d4d2e2ea23468'
 
 agent = get_user_agent()
-print('aye')
-options.add_extension('anticaptcha-plugin_v0_52.xpi')
 options.add_argument('--disable-notifications')
 options.add_argument('disable-infobars')
 options.add_argument("--lang=en-US")
@@ -39,11 +44,73 @@ options.add_argument('--disable-gpu')
 options.add_argument('--disable-blink-features=AutomationControlled')
 options.add_experimental_option('useAutomationExtension', False)
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
+driver = webdriver.Chrome('chromedriver.exe', options=options)
 
-driver = webdriver.Chrome('chromedriver.exe', options=options, seleniumwire_options=proxy_option)
 
-url = 'https://gaming.pringles.com/da_DK/Register'
-phone = f'+45208{random.randint(10000, 99999)}'
+def generateEmail():
+    return ''.join(choice(ascii_letters) for i in range(12)) + str(random.randint(10, 9999)) + '@hosttomals.com'
+
+
+def getName():
+    person = Person(Locale.EN)
+    return person.first_name(), person.surname()
+
+
+def zipCod():
+    return random.randint(12345, 99999)
+
+
+def captha_solve():
+    session = requests.Session()
+    i = 0
+    while i < 1:
+        raw = {
+            "clientKey": "51eae633b6157688e92d4d2e2ea23468",
+            "task":
+                {
+                    "type": "NoCaptchaTaskProxyless",
+                    "websiteURL": "https://www.doritosrockstarenergy.com",
+                    "websiteKey": "6LcfduIUAAAAAMF1tuZ9r3qWvNfFF5YZrA9Edp0o"
+                },
+           "softId": "909"
+        }
+
+        t = session.post('https://api.anti-captcha.com/createTask', data=json.dumps(raw))
+        taskId = json.loads(t.content)
+        taskId = taskId['taskId']
+        raw_captha = {
+            "clientKey": "c52ad7803c2b236945e99d31fe941f6d",
+            "taskId": taskId
+        }
+        attemps = 0
+
+        while True:
+            attemps += 1
+            s = session.post('https://api.anti-captcha.com/getTaskResult', data=json.dumps(raw_captha))
+            status = json.loads(s.content)
+            status_check = status['status']
+            if status_check == 'ready':
+                respone_captha = status['solution']['gRecaptchaResponse']
+                i += 1
+                return respone_captha
+            if attemps > 14:
+                break
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -66,42 +133,7 @@ if __name__ == '__main__':
         time.sleep(2)
         pole = driver.find_element(By.XPATH, '//*[@id="gigya-textbox-52636650089352940"]')
         pole.send_keys(person.first_name())
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-textbox-159831833930945280"]')
-        action.move_to_element(pole).click().perform()
-        pole.send_keys(person.surname())
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-textbox-32320507946185452"]')
-        action.move_to_element(pole).click().perform()
-        pole.send_keys(address.street_name())
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-textbox-51344355090310960"]')
-        action.move_to_element(pole).click().perform()
-        pole.send_keys(address.street_number())
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-textbox-88822848488352300"]')
-        action.move_to_element(pole).click().perform()
-        pole.send_keys(address.city())
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-textbox-39065714942046050"]')
-        action.move_to_element(pole).click().perform()
-        pole.send_keys(address.postal_code())
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-textbox-55761250888667520"]')
-        action.move_to_element(pole).click().perform()
-        pole.send_keys(phone)
 
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-multiChoice-0-129645468760921980"]')
-
-        action.move_to_element(pole).click().perform()
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-checkbox-124950540987203460"]')
-
-        action.move_to_element(pole).click().perform()
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-checkbox-160298844928918820"]')
-        action.move_to_element(pole).click().perform()
-
-
-        login = generate_login()
-        # email1
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-loginID-133415729987448180"]')
-        pole.send_keys(login)
-        # email2
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-textbox-19195255866927190"]')
-        pole.send_keys(login)
 
         # password 1
         password = 'DjambulatLubitRamazana123!'
@@ -122,15 +154,35 @@ if __name__ == '__main__':
         pole = driver.find_element(By.XPATH, '//*[@id="gigya-checkbox-124950540987203460"]')
         pole.click()
 
-        WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="gigya-checkbox-160298844928918820"]')))
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-checkbox-160298844928918820"]')
-        pole.click()
+        email = 'kitten@labelpap.com'
+        password = 'Kiril123!'
+        check_all_emails(email, password)
+
+
 
 
         pole = driver.find_element(By.XPATH, '//*[@id="register-site-login"]/div[14]/input')
         pole.click()
 
-        time.sleep(600)
+
+        code = False
+        attemps = 0
+        while not code:
+            print(attemps)
+            attemps += 1
+            code = read(email, password)
+            print(code)
+            if code:
+                break
+            else:
+                time.sleep(5)
+            if attemps >= 20:
+                break
+
+
+        time.sleep(10000)
+
+
 
 
     except Exception as er:

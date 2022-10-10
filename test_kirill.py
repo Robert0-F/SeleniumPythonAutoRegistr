@@ -15,5 +15,5 @@ def registration():
     data = json.dumps(data)
     session = requests.Session()
     lnk = 'https://www.doritosrockstarenergy.com/WebMethods.aspx/Register'
-    print(requests.post(lnk))
+    print(requests.post(lnk, verify = False))
 registration()

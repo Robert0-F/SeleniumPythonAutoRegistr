@@ -17,7 +17,6 @@ from scripts.getUserAgent import get_user_agent
 from scripts.emailApi import check_all_emails, read
 from scripts.getEmail import generate_login
 import requests
-import undetected_chromedriver as uc
 import json
 
 
@@ -66,23 +65,15 @@ def zipCod():
 
 def get_codes(upc, front):
     link = 'https://www.doritosrockstarenergy.com/WebMethods.aspx/EnterCodes'
-    headers = {}
     for i in range(upc, 99999):
         for j in range(front, 999999999):
-            data = {'codes' : [f'{i}', f'{j}']}
-            data = json.dumps(data)
+            pass
 
 def registration():
-    data = {'BirthDate': "07/05/2001",
-            'Email': f"{generateEmail()}",
-            'FirstName': f'{getName()[0]}',
-            'LastName': f'{getName()[1]}',
-            'PostalCode':f"{zipCod()}",
-            'SiteCode': "Microsite"}
-    data = json.dumps(data)
+
     session = requests.Session()
     lnk = 'https://www.doritosrockstarenergy.com/WebMethods.aspx/Register'
-    print(session.post(lnk, headers = headers, data = data))
+    print(session.post(lnk))
 
 
 def captha_solve():
@@ -139,77 +130,77 @@ def captha_solve():
 
 
 
-if __name__ == '__main__':
-    try:
-        driver.get(url=url)
-        time.sleep(4)
-        action = ActionChains(driver)
-
-        WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[3]/section/main/div/section/div/div/div[2]/div[2]/div/form/div[2]/div[3]/div[6]/a/span')))
-        pole = driver.find_element(By.XPATH, '/html/body/div[3]/section/main/div/section/div/div/div[2]/div[2]/div/form/div[2]/div[3]/div[6]/a/span')
-        pole.location_once_scrolled_into_view
-        print(12)
-        time.sleep(3)
-        action.move_to_element(pole).click().perform()
-        print(1)
-        WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="gigya-textbox-39065714942046050"]')))
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-textbox-39065714942046050"]')
-        pole.location_once_scrolled_into_view
-        time.sleep(2)
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-textbox-52636650089352940"]')
-        pole.send_keys(person.first_name())
-
-
-        # password 1
-        password = 'DjambulatLubitRamazana123!'
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-password-129521167110879820"]')
-        pole.send_keys(password)
-
-        # password 2
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-password-2803893837206091"]')
-        pole.send_keys(password)
-
-
-        pole = driver.find_element(By.ID, 'gigya-multiChoice-0-129645468760921980')
-        pole.location_once_scrolled_into_view
-        WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.ID, 'gigya-multiChoice-0-129645468760921980')))
-        pole.click()
-
-        WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="gigya-checkbox-124950540987203460"]')))
-        pole = driver.find_element(By.XPATH, '//*[@id="gigya-checkbox-124950540987203460"]')
-        pole.click()
-
-        email = 'kitten@labelpap.com'
-        password = 'Kiril123!'
-        check_all_emails(email, password)
-
-
-
-
-        pole = driver.find_element(By.XPATH, '//*[@id="register-site-login"]/div[14]/input')
-        pole.click()
-
-
-        code = False
-        attemps = 0
-        while not code:
-            print(attemps)
-            attemps += 1
-            code = read(email, password)
-            print(code)
-            if code:
-                break
-            else:
-                time.sleep(5)
-            if attemps >= 20:
-                break
-
-
-        time.sleep(10000)
-
-
-
-
-    except Exception as er:
-        print(er)
-        time.sleep(100000)
+# if __name__ == '__main__':
+#     try:
+#         driver.get(url=url)
+#         time.sleep(4)
+#         action = ActionChains(driver)
+#
+#         WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[3]/section/main/div/section/div/div/div[2]/div[2]/div/form/div[2]/div[3]/div[6]/a/span')))
+#         pole = driver.find_element(By.XPATH, '/html/body/div[3]/section/main/div/section/div/div/div[2]/div[2]/div/form/div[2]/div[3]/div[6]/a/span')
+#         pole.location_once_scrolled_into_view
+#         print(12)
+#         time.sleep(3)
+#         action.move_to_element(pole).click().perform()
+#         print(1)
+#         WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="gigya-textbox-39065714942046050"]')))
+#         pole = driver.find_element(By.XPATH, '//*[@id="gigya-textbox-39065714942046050"]')
+#         pole.location_once_scrolled_into_view
+#         time.sleep(2)
+#         pole = driver.find_element(By.XPATH, '//*[@id="gigya-textbox-52636650089352940"]')
+#         pole.send_keys(person.first_name())
+#
+#
+#         # password 1
+#         password = 'DjambulatLubitRamazana123!'
+#         pole = driver.find_element(By.XPATH, '//*[@id="gigya-password-129521167110879820"]')
+#         pole.send_keys(password)
+#
+#         # password 2
+#         pole = driver.find_element(By.XPATH, '//*[@id="gigya-password-2803893837206091"]')
+#         pole.send_keys(password)
+#
+#
+#         pole = driver.find_element(By.ID, 'gigya-multiChoice-0-129645468760921980')
+#         pole.location_once_scrolled_into_view
+#         WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.ID, 'gigya-multiChoice-0-129645468760921980')))
+#         pole.click()
+#
+#         WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="gigya-checkbox-124950540987203460"]')))
+#         pole = driver.find_element(By.XPATH, '//*[@id="gigya-checkbox-124950540987203460"]')
+#         pole.click()
+#
+#         email = 'kitten@labelpap.com'
+#         password = 'Kiril123!'
+#         check_all_emails(email, password)
+#
+#
+#
+#
+#         pole = driver.find_element(By.XPATH, '//*[@id="register-site-login"]/div[14]/input')
+#         pole.click()
+#
+#
+#         code = False
+#         attemps = 0
+#         while not code:
+#             print(attemps)
+#             attemps += 1
+#             code = read(email, password)
+#             print(code)
+#             if code:
+#                 break
+#             else:
+#                 time.sleep(5)
+#             if attemps >= 20:
+#                 break
+#
+#
+#         time.sleep(10000)
+#
+#
+#
+#
+#     except Exception as er:
+#         print(er)
+#         time.sleep(100000)

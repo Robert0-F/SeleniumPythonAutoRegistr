@@ -18,7 +18,9 @@ from scripts.emailApi import check_all_emails, read
 from scripts.getEmail import generate_login
 import requests
 import json
-
+import urllib3
+import json
+urllib3.disable_warnings()
 
 options = webdriver.ChromeOptions()
 
@@ -69,11 +71,44 @@ def get_codes(upc, front):
         for j in range(front, 999999999):
             pass
 
-def registration():
+def try_code(upc, front, member_id):
+    headers = {
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.9,ru;q=0.8',
+        'Connection': 'keep-alive',
+        'Content-Type': 'application/json; charset=UTF-8',
+        # Requests sorts cookies= alphabetically
+        # 'Cookie': 'ASP.NET_SessionId=qk20pvsyfspdd2wdeu1eq4o0; TMA%20-%20Doritos%20XBOX%20IWGDPR=accepted; _ga=GA1.2.389761519.1665424919; _gid=GA1.2.856775663.1665424919; _gat_UA-11401921-227=1',
+        'HeaderToken': '',
+        'Origin': 'https://www.doritosrockstarenergy.com',
+        'Referer': 'https://www.doritosrockstarenergy.com/code-entry',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+        'User-Agent': f'{get_user_agent()}',
+        'X-Requested-With': 'XMLHttpRequest',
+        'sec-ch-ua': '"Chromium";v="106", "Google Chrome";v="106", "Not;A=Brand";v="99"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+    }
 
-    session = requests.Session()
-    lnk = 'https://www.doritosrockstarenergy.com/WebMethods.aspx/Register'
-    print(session.post(lnk))
+    json_data = {
+        'memberId': member_id,
+        'codes': [
+            f'{front}',
+            f'{upc}',
+        ],
+        'date': '',
+        'tabCode': '',
+        'codeType': 'DORITOS',
+        'response': '03AIIukziGzmfk5-jMxHXZS0qTXVkebH0B8DKKzJ2-YWe9tremi8OxVA1WloBoc42MiUvHGv7WS1lO7-MYdFRJnLCrX7KoesyUzP4zQqia1dbP51zQ97SRUN9ff6k6la6wRuNdrOE65IdvI9THDmnYS158rJxy8UpBD8rPxn8peq530tQS78voTceDm4KUvba_Vvw4uJeUeeS-LYhRYWu9BoP1vQbEFBJ6VpKa7lZx9qOc1YPzCEli_60cxt6ZE8LhZpOkMgw7CrWitfr72B0QPiFonnScqyrVFTLCvfQo2MaXvkuO-FdUIwT4Fm7Dd-LH_NwD2EcegluVnzBYzHUosf2IZk4rm5ePpHIJosJSDukt0SCDLRfKbUwGO3YAPSHZVCF0KcW1wUqsXJ6uDfIaUpxaZMwArZT84k14YdfkthXJqO5416vTwNkaIfhyHDPfkB-VZ-SfALFqiAr63yqVZSXytGoyXSMmY44Pv-D8vnzZLXLhMd0zeFFMAOos1UZKapnKxpK_JU7sppPo2A_p6ldlGqK3T20OZCzSjuxG--ZUusBhV3nCltgJzvNNQWzDXuMcD8Be2uiGw_umd7LGJU2S06geU5-uigcnNzf1ka5PD1_w57miqbIFZ_ohHlOmXSGiX3kC0qhSDMyfmu5AvJqBj4JB7EABNC5wUkGBk9fQNqwkK4CQ_FQDha3VWPgiTLV1HimBhspw5o7VUf-WrIBCdJvepaydCOf1SGTTKFOWCBZvkWdlTr5WKG1RCCoGAMNPEX67FQqcVeKcshE48iMbe2--pUBtwEjya3-YkJ4sTLWOiWFU26tKjNicwyFtlXxmMdzfpPNrqBqXPzAJoTxEeOY5X2NGd2yd1bb4AQyQr21984MgHcKypg4iyiuBOrG2LSWYQwi_zbzzHeiGFHiHENO6uPqmkxvNThxKiZmkKIjqaCagvZsTJxYIOLZXC9heShKZfVrxcoKRfw-ruQLr_hPpT_d56ZST3sVgrhTPPLpiOZbVLFXjr5CCYll9m44S5XO9PfbuVA6OGsVTJBZ44mwZZBZ0V7IOEt4h_fMqwOQ-zx_HW3jKgVYhjHrZzG_SXbvh-2Vls_iR34Xk4O0M_SaCtWspdyhtTDVUXn71IdCQhJCWLkCFdiO28mVIcknWARGxvZ3hq6zHApCgK46jzi89Y5GNH3RBNkmpyVGKtYWtZnglFKHh3l2WXS1yZx2YmGucxSGXhwF3TTvdhB3LMawW4v-g1x73LgPfn5MCK9fyIpuH15jpigmgmFULU8ubcvzihMxLHwQc3Agb_31qdt36yg1WoA',
+        'currentCulture': 'en',
+    }
+
+    response = requests.post('https://www.doritosrockstarenergy.com/WebMethods.aspx/EnterCodes', headers=headers,
+                             json=json_data, verify=False)
+    stroka = response.json()
+    print(stroka['Message'])
 
 
 def captha_solve():

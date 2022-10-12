@@ -1,5 +1,7 @@
 import requests
-
+import urllib3
+import json
+urllib3.disable_warnings()
 cookies = {
     'ASP.NET_SessionId': 'qk20pvsyfspdd2wdeu1eq4o0',
     'TMA%20-%20Doritos%20XBOX%20IWGDPR': 'accepted',
@@ -78,4 +80,4 @@ json_data = {
 }
 
 response = requests.post('https://www.doritosrockstarenergy.com/WebMethods.aspx/Register', headers=headers, json=json_data, verify=False)
-print(response.json())
+print((json.loads(response.json().get('d'))).get('errors'))

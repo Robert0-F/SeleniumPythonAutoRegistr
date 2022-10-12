@@ -108,5 +108,5 @@ def try_code(upc, front, member_id):
         print('Код неправильный')
     elif(response.find('There was an error processing the request.') >= 1):
         print('Что то не так')
-
+        ЗАЕБАЛСЯ Я С ЕБАНЫМ "Please check if you have verified yourself with reCAPTCHA"
 try_code(34526, 532547431, 297132)
